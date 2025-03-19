@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #d62828;
+  --color-secondary: #1d4ed8;
+  --color-third: #ffffff;
+}
+
+.ql-editor img {
+  max-width: 100% !important;
+  height: auto !important;
+  cursor: move;
+  resize: both;
+  overflow: auto;
+}
+
+.ql-editor .resize-handle {
+  width: 10px;
+  height: 10px;
+  background: black;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 9;
+  cursor: nwse-resize;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.3s;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar,
+.custom-scrollbar:focus::-webkit-scrollbar,
+.custom-scrollbar:active::-webkit-scrollbar {
+  opacity: 1; /* Show on hover, focus, or while scrolling */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
