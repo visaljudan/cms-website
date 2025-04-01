@@ -14,8 +14,4 @@ export default defineConfig({
       quill: "quill/dist/quill.js",
     },
   },
-  server: {
-    host: "0.0.0.0", // REMOVE this line if it's there
-    port: 3000, // REMOVE this line if it's there
-  },
 });
