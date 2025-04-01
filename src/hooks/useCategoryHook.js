@@ -6,7 +6,7 @@ import api from "../api/axiosConfig";
 export const useCategoryHook = () => {
   const { currentUser } = useSelector((state) => state.user);
   const token = currentUser?.data?.token;
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -19,9 +19,8 @@ export const useCategoryHook = () => {
     try {
       const response = await api.get("/v1/categories", {
         headers: { Authorization: `Bearer ${token}` },
-        params: params,
+        params,
       });
-      console.log(params);
       const data = response.data.data;
       setCategories(response.data.data);
       return { data };
@@ -52,6 +51,7 @@ export const useCategoryHook = () => {
 
   // Create a new category
   const createCategory = async (categoryData) => {
+    console.log(categoryData);
     setLoading(true);
     try {
       const response = await api.post("/v1/categories", categoryData, {

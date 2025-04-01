@@ -240,7 +240,7 @@ const AdminUserManagementPage = () => {
     });
     setInitialState({
       id: user._id,
-      name: user.name,
+      name: user.name,  
       username: user.username,
       email: user.email,
       avatar: user.avatar,

@@ -3,25 +3,25 @@ import { useSelector } from "react-redux";
 import socket from "../api/socketConfig";
 import api from "../api/axiosConfig";
 
-export const useSaveHook = () => {
+export const useLikeCommentHook = () => {
   const { currentUser } = useSelector((state) => state.user);
   const token = currentUser?.data?.token;
   const [loading, setLoading] = useState(false);
-  const [saves, setSaves] = useState([]);
+  const [likeComments, setLikeComments] = useState([]);
   useEffect(() => {
-    getSaves();
+    getLikeComments();
   }, []);
 
-  // Fetch all saves
-  const getSaves = async (params = {}) => {
+  // Fetch all like comments
+  const getLikeComments = async (params = {}) => {
     setLoading(true);
     try {
-      const response = await api.get("/v1/saves", {
+      const response = await api.get("/v1/like-comments", {
         headers: { Authorization: `Bearer ${token}` },
         params,
       });
       const data = response.data.data;
-      setSaves(data);
+      setLikeComments(data);
       return { data };
     } catch (error) {
       const data = error?.response?.data || "An unexpected error occurred.";
@@ -31,11 +31,11 @@ export const useSaveHook = () => {
     }
   };
 
-  // Fetch a single save
-  const getSave = async (saveId) => {
+  // Fetch a single like comment
+  const getLikeComment = async (likeCommentId) => {
     setLoading(true);
     try {
-      const response = await api.get(`/v1/saves/${saveId}`, {
+      const response = await api.get(`/v1/like-comments/${likeCommentId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = response.data;
@@ -48,17 +48,18 @@ export const useSaveHook = () => {
     }
   };
 
-  // Create a new save
-  const createSave = async (saveData) => {
+  // Create a new like comment
+  const createLikeComment = async (likeCommentId) => {
     setLoading(true);
     try {
       const response = await api.post(
-        "/v1/saves",
-        { articleId: saveData },
+        "/v1/like-comments",
+        { commentId: likeCommentId },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       return { data: response.data };
     } catch (error) {
       return {
@@ -69,15 +70,14 @@ export const useSaveHook = () => {
     }
   };
 
-  // Delete a save
-  const deleteSave = async (saveId) => {
+  // Delete a like comment
+  const deleteLikeComment = async (likeCommentId) => {
     setLoading(true);
     try {
-      const response = await api.delete("/v1/saves", {
+      const response = await api.delete("/v1/like-comments", {
         headers: { Authorization: `Bearer ${token}` },
-        data: { articleId: saveId }, // Correct way to pass data in DELETE requests
+        data: { commentId: likeCommentId },
       });
-
       return { data: response.data };
     } catch (error) {
       return {
@@ -88,44 +88,40 @@ export const useSaveHook = () => {
     }
   };
 
-  const handleSaveCreated = (newSave) => {
-    if (token) {
-      setSaves((prevSaves) => ({
-        ...prevSaves,
-        data: [...prevSaves?.data, newSave],
-        total: prevSaves.total + 1,
-      }));
-    }
+  const handleLikeCommentCreated = (newLikeComment) => {
+    setLikeComments((prevLikeComments) => ({
+      ...prevLikeComments,
+      data: [...prevLikeComments.data, newLikeComment],
+      total: prevLikeComments.total + 1,
+    }));
   };
 
-  const handleSaveDeleted = (deletedSaveId) => {
-    if (token) {
-      setSaves((prevSaves) => ({
-        ...prevSaves,
-        data: prevSaves?.data?.filter(
-          (save) => save.articleId._id !== deletedSaveId
-        ),
-        total: prevSaves.total > 0 ? prevSaves.total - 1 : 0,
-      }));
-    }
+  const handleLikeCommentDeleted = (deletedLikeCommentId) => {
+    setLikeComments((prevLikeComments) => ({
+      ...prevLikeComments,
+      data: prevLikeComments.data.filter(
+        (likeComment) => likeComment.commentId._id !== deletedLikeCommentId
+      ),
+      total: prevLikeComments.total > 0 ? prevLikeComments.total - 1 : 0,
+    }));
   };
 
   useEffect(() => {
-    socket.on("articleSaved", handleSaveCreated);
-    socket.on("articleUnsaved", handleSaveDeleted);
+    socket.on("commentLiked", handleLikeCommentCreated);
+    socket.on("commentUnliked", handleLikeCommentDeleted);
 
     return () => {
-      socket.off("articleSaved", handleSaveCreated);
-      socket.off("articleUnsaved", handleSaveDeleted);
+      socket.off("commentLiked", handleLikeCommentCreated);
+      socket.off("commentUnliked", handleLikeCommentDeleted);
     };
   }, []);
 
   return {
-    saves,
+    likeComments,
     loading,
-    getSaves,
-    getSave,
-    createSave,
-    deleteSave,
+    getLikeComments,
+    getLikeComment,
+    createLikeComment,
+    deleteLikeComment,
   };
 };

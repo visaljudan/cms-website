@@ -10,6 +10,8 @@ import {
 } from "../../app/user/userSlice";
 import api from "../../api/axiosConfig";
 import { useDispatch } from "react-redux";
+import ScrollToTop from "../../components/ScrollToTop";
+import ButtonGoogle from "../../components/ButtonGoogle";
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -69,13 +71,14 @@ const SignInPage = () => {
 
   return (
     <MainLayout>
+      <ScrollToTop />
       <div className="flex items-center justify-center h-fit my-4">
-          <motion.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-xl"
-          >
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-xl"
+        >
           <h2 className="text-2xl font-bold text-center text-primary cursor-default">
             Sign In
           </h2>
@@ -129,7 +132,7 @@ const SignInPage = () => {
               type="submit"
               className="w-full p-3 text-white bg-primary rounded-lg hover:bg-primary-dark transition-all"
             >
-              {loading ? "Loading" : "Sign In"}
+              {loading ? "Signing In..." : "Sign In"}
             </button>
             {errors.form && (
               <p className="text-red-500 text-xs text-center">{errors.form}</p>
@@ -137,14 +140,7 @@ const SignInPage = () => {
             <div className="text-center text-sm text-gray-600">
               Or continue with
             </div>
-            <button className="w-full flex items-center justify-center p-3 text-third border border-primary bg-primary hover:bg-third  hover:text-primary font-bold rounded-xl transition-all">
-              <img
-                src="https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/dark/google-color.png"
-                alt="Google"
-                className="w-5 h-5 mr-2"
-              />
-              Continue with Google
-            </button>
+            <ButtonGoogle />
             <div className="text-center mt-4">
               <p className="text-sm">
                 <span>Don't have an account? </span>

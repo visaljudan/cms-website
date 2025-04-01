@@ -9,17 +9,13 @@ export const useArticleHook = () => {
   const [loading, setLoading] = useState(false);
   const [articles, setArticles] = useState([]);
 
-  useEffect(() => {
-    getArticles();
-  }, []);
-
   // Fetch all articles
   const getArticles = useCallback(async (params = {}) => {
     setLoading(true);
     try {
       const response = await api.get("/v1/articles", {
         headers: { Authorization: `Bearer ${token}` },
-        params: params,
+        params,
       });
       const data = response.data.data;
       setArticles(data);
@@ -103,6 +99,10 @@ export const useArticleHook = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    getArticles();
+  }, []);
 
   const handleArticleCreated = (newArticle) => {
     setArticles((prevArticles) => ({

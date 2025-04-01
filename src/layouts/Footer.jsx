@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-300 py-8">
@@ -17,24 +19,34 @@ const Footer = () => {
             <h3 className="text-xl font-semibold text-white">Quick Links</h3>
             <ul className="mt-2 space-y-2">
               <li>
-                <a href="/" className="hover:text-white">
+                <NavLink to="/" className="hover:text-white">
                   Home
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="/category" className="hover:text-white">
+                <NavLink to="/categories" className="hover:text-white">
                   Categories
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="/about-us" className="hover:text-white">
+                <NavLink to="/authors" className="hover:text-white">
+                  Authors
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/about-us" className="hover:text-white">
                   About Us
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="/contact" className="hover:text-white">
+                <NavLink to="/contact-us" className="hover:text-white">
                   Contact
-                </a>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/search" className="hover:text-white">
+                  Search
+                </NavLink>
               </li>
             </ul>
           </div>
@@ -43,15 +55,15 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-semibold text-white">Follow Us</h3>
             <div className="mt-2 flex space-x-4">
-              <a href="#" className="hover:text-white">
+              <NavLink to="#" className="hover:text-white">
                 <i className="fab fa-facebook"></i> Facebook
-              </a>
-              <a href="#" className="hover:text-white">
+              </NavLink>
+              <NavLink to="#" className="hover:text-white">
                 <i className="fab fa-twitter"></i> Twitter
-              </a>
-              <a href="#" className="hover:text-white">
+              </NavLink>
+              <NavLink to="#" className="hover:text-white">
                 <i className="fab fa-instagram"></i> Instagram
-              </a>
+              </NavLink>
             </div>
           </div>
         </div>
@@ -60,12 +72,12 @@ const Footer = () => {
         <div className="mt-6 flex flex-col md:flex-row justify-between items-center text-sm">
           <p>© {new Date().getFullYear()} CMS. All rights reserved.</p>
           <div className="flex space-x-4">
-            <a href="/terms" className="hover:text-white">
+            <NavLink to="/terms" className="hover:text-white">
               Terms of Service
-            </a>
-            <a href="/privacy" className="hover:text-white">
+            </NavLink>
+            <NavLink to="/privacy" className="hover:text-white">
               Privacy Policy
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>

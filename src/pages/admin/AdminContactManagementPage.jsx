@@ -1,83 +1,74 @@
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Edit, Eye, Plus, Trash } from "lucide-react";
-import { useCommentHook } from "../../hooks/useCommentHook";
-import { toast } from "react-toastify";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import Loading from "../../components/Loading";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useContactHook } from "../../hooks/useContactHook";
+import { toast } from "react-toastify";
 
-const AdminCommentManagementPage = () => {
-  const navigate = useNavigate();
+const ContactManagement = () => {
   const {
-    comments,
-    loading: commentsLoading,
-    getComments,
-    deleteComment,
-  } = useCommentHook();
+    contacts,
+    loading: contactsLoading,
+    deleteContact,
+  } = useContactHook();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const totalPages = Math.ceil(comments?.total / itemsPerPage);
+  const totalPages = Math.ceil(contacts?.total / itemsPerPage);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [selectedComment, setSelectedComment] = useState(null);
 
+  // Delete Contact
+  const [showModal, setShowModal] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
+  const openModal = (contact) => {
+    setSelectedContact(contact);
+    setShowModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (selectedContact) {
+      handleDeleteContact(selectedContact._id);
+      setShowModal(false);
+      setSelectedContact(null);
+    }
+  };
+
+  const handleDeleteContact = async (contactId) => {
+    const response = await deleteContact(contactId);
+    toast.success(response.data.message);
+    clearStateCategory();
+  };
+
+  // Page
   const handleItemsPerPageChange = (e) => {
     setItemsPerPage(Number(e.target.value));
     setCurrentPage(1);
   };
 
   const handlePageChange = (pageNumber) => {
-    if (pageNumber < 1 || pageNumber > totalPages) return;
+    if (pageNumber < 1) return;
+    if (pageNumber > totalPages) return;
     setCurrentPage(pageNumber);
   };
 
-  const filteredComments = comments.data
-    ?.filter((comment) => {
+  const filteredContacts = contacts?.data
+    ?.filter((contact) => {
       const matchesSearchQuery =
-        comment._id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        comment.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        comment.user.toLowerCase().includes(searchQuery.toLowerCase());
+        contact._id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        contact.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        contact.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        contact.subject?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        contact.message?.toLowerCase().includes(searchQuery.toLowerCase());
 
       return matchesSearchQuery;
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-  useEffect(() => {
-    const fetchComments = async () => {
-      const params = {
-        page: currentPage,
-        limit: itemsPerPage,
-      };
-      await getComments(params);
-    };
-
-    fetchComments();
-  }, [itemsPerPage, currentPage]);
-
-  const openModal = (comment) => {
-    setSelectedComment(comment);
-    setShowModal(true);
-  };
-
-  const confirmDelete = () => {
-    if (selectedComment) {
-      handleDeleteComment(selectedComment._id);
-      setShowModal(false);
-      setSelectedComment(null);
-    }
-  };
-
-  const handleDeleteComment = async (commentId) => {
-    const response = await deleteComment(commentId);
-    toast.success(response.data.message);
-  };
 
   return (
     <DashboardLayout>
       <div className="p-6 bg-white rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-700">
-            Comments Management
+            Contact Management
           </h2>
         </div>
 
@@ -87,12 +78,11 @@ const AdminCommentManagementPage = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search comments..."
+            placeholder="Search contact..."
             className="w-full px-4 py-2 border border-primary rounded-lg focus:outline-none focus:ring-primary"
           />
         </div>
 
-        {/* Comments Table */}
         <div className="overflow-auto">
           <table className="w-full border border-gray-200 rounded-lg">
             <thead className="bg-gray-100">
@@ -101,13 +91,16 @@ const AdminCommentManagementPage = () => {
                   Id
                 </th>
                 <th className="px-4 py-2 text-left font-bold text-gray-600">
-                  User
+                  Name
                 </th>
                 <th className="px-4 py-2 text-left font-bold text-gray-600">
-                  Article
+                  Email
                 </th>
                 <th className="px-4 py-2 text-left font-bold text-gray-600">
-                  Comment
+                  Subject
+                </th>
+                <th className="px-4 py-2 text-left font-bold text-gray-600">
+                  Message
                 </th>
                 <th className="px-4 py-2 text-left font-bold text-gray-600">
                   Actions
@@ -115,57 +108,37 @@ const AdminCommentManagementPage = () => {
               </tr>
             </thead>
             <tbody>
-              {commentsLoading ? (
+              {contactsLoading ? (
                 <tr>
-                  <td colSpan={5} className="text-center py-4">
+                  <td colSpan={6} className="text-center py-4">
                     <Loading />
                   </td>
                 </tr>
-              ) : filteredComments?.length === 0 ? (
+              ) : filteredContacts?.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="text-center text-gray-500 py-4">
-                    No comments available
+                  <td colSpan={6} className="text-center text-gray-500 py-4">
+                    No contact available
                   </td>
                 </tr>
               ) : (
-                filteredComments?.map((comment) => (
-                  <tr key={comment._id} className="border-t border-gray-200">
-                    <td className="px-4 py-3 text-gray-700">{comment._id}</td>
+                filteredContacts?.map((contact) => (
+                  <tr key={contact._id} className="border-t border-gray-200">
+                    <td className="px-4 py-3 text-gray-700">{contact._id}</td>
+                    <td className="px-4 py-3 text-gray-700">{contact.name}</td>
+                    <td className="px-4 py-3 text-gray-700">{contact.email}</td>
                     <td className="px-4 py-3 text-gray-700">
-                      <div className="flex items-center space-x-2">
-                        <img
-                          src={comment.userId.avatar}
-                          alt={comment.userId.name}
-                          className="w-10 h-10 object-center rounded-full"
-                        />
-                        <p>{comment.userId.name}</p>
-                      </div>
+                      {contact.subject}
                     </td>
                     <td className="px-4 py-3 text-gray-700">
-                      <NavLink to={`/article/${comment?.articleId?._id}`}>
-                        {comment?.articleId?.title}
-                      </NavLink>
+                      {contact.message}
                     </td>
-                    <td className="px-4 py-3 text-gray-700">
-                      {comment.content}
-                    </td>
-
                     <td className="px-4 py-3 flex items-center space-x-4">
                       <button
-                        onClick={() => openModal(comment)}
+                        onClick={() => openModal(contact)}
                         className="text-red-500 hover:text-red-600"
                         title="Delete"
                       >
                         <Trash />
-                      </button>
-                      <button
-                        onClick={() =>
-                          navigate(`/article/${comment?.articleId?.articleId}`)
-                        }
-                        className="text-red-500 hover:text-red-600"
-                        title="Delete"
-                      >
-                        <Eye />
                       </button>
                     </td>
                   </tr>
@@ -182,7 +155,7 @@ const AdminCommentManagementPage = () => {
                   Confirm Deletion
                 </h3>
                 <p className="text-gray-600">
-                  Are you sure you want to delete this comment?
+                  Are you sure you want to delete this contact?
                 </p>
                 <div className="flex justify-end mt-4 gap-2">
                   <button
@@ -244,4 +217,4 @@ const AdminCommentManagementPage = () => {
   );
 };
 
-export default AdminCommentManagementPage;
+export default ContactManagement;

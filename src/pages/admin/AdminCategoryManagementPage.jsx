@@ -579,8 +579,8 @@ const AdminCategoryManagementPage = () => {
                       <div className="mt-2">
                         <input
                           type="file"
-                          name="avatar"
-                          id="avatar"
+                          name="image"
+                          id="image"
                           ref={fileInputRef}
                           onChange={handleImageChange}
                           className="hidden"

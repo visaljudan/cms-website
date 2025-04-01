@@ -17,10 +17,10 @@ const CategorySection = ({ category }) => {
     };
 
     fetchArticle();
-  }, [category._id]);
+  }, [category?._id]);
 
   const filteredArticles = articles?.data?.filter(
-    (article) => article.categoryId._id === category._id
+    (article) => article.categoryId?._id === category._id
   );
 
   return (
@@ -46,7 +46,7 @@ const CategorySection = ({ category }) => {
             <p>No articles found for this category.</p>
           ) : filteredArticles?.length > 0 ? (
             articles?.data
-              ?.filter((article) => article.categoryId._id === category._id)
+              ?.filter((article) => article.categoryId?._id === category?._id)
               .map((article) => (
                 <ArticleCard key={article._id} article={article} />
               ))

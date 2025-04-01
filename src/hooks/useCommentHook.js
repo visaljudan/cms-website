@@ -61,8 +61,7 @@ export const useCommentHook = (articleId) => {
       const data = response.data;
       return { data };
     } catch (error) {
-      const data =
-        error?.response?.data?.message || "An unexpected error occurred.";
+      const data = error?.response?.data || "An unexpected error occurred.";
       return { data };
     } finally {
       setLoading(false);
@@ -71,7 +70,6 @@ export const useCommentHook = (articleId) => {
 
   // Update an existing comment
   const updateComment = async (commentId, updatedData) => {
-    console.log(updatedData);
     setLoading(true);
     try {
       const response = await api.patch(
@@ -102,9 +100,7 @@ export const useCommentHook = (articleId) => {
       const data = response.data;
       return { data };
     } catch (error) {
-      const data =
-        error?.response?.data?.message || "An unexpected error occurred.";
-      console.log(error?.response?.data);
+      const data = error?.response?.data || "An unexpected error occurred.";
       return { data };
     } finally {
       setLoading(false);
@@ -113,7 +109,8 @@ export const useCommentHook = (articleId) => {
 
   const handleCommentCreated = (newComment) => {
     setComments((prevComments) => {
-      if (newComment.articleId?._id !== articleId) return prevComments;
+      if (newComment.articleId?.articleId.toString() !== articleId)
+        return prevComments;
 
       return {
         ...prevComments,
@@ -126,15 +123,15 @@ export const useCommentHook = (articleId) => {
   };
 
   const handleCommentUpdated = (updatedComment) => {
-    setComments((prevComments) =>
-      prevComments.map((comment) =>
+    setComments((prevComments) => ({
+      ...prevComments,
+      data: prevComments?.data.map((comment) =>
         comment._id === updatedComment._id ? updatedComment : comment
-      )
-    );
+      ),
+    }));
   };
 
   const handleCommentDeleted = (deletedCommentId) => {
-    console.log(deletedCommentId);
     setComments((prevComments) => ({
       ...prevComments,
       data: prevComments.data.filter(

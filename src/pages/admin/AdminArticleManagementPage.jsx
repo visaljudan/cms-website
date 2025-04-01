@@ -266,9 +266,6 @@ const AdminArticleManagementPage = () => {
         {/* articles Table */}
         <div>
           <div className="overflow-auto">
-            {/* {articles.data?.map((article, index) => (
-              <ArticleCard key={index} article={article} />
-            ))} */}
             <table className="w-full border border-gray-200 rounded-lg">
               <thead className="bg-gray-100">
                 <tr>
@@ -298,13 +295,13 @@ const AdminArticleManagementPage = () => {
               <tbody>
                 {articlesLoading ? (
                   <tr>
-                    <td colSpan={5} className="text-center text-gray-500 py-4">
+                    <td colSpan={7} className="text-center text-gray-500 py-4">
                       <Loading />
                     </td>
                   </tr>
                 ) : filteredArticles?.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center text-gray-500 py-4">
+                    <td colSpan={7} className="text-center text-gray-500 py-4">
                       No articles available
                     </td>
                   </tr>

@@ -13,15 +13,13 @@ import {
 import { useDispatch } from "react-redux";
 import Loading from "../../components/Loading";
 import api from "../../api/axiosConfig";
-import { useRoleHook } from "../../hooks/useRoleHook";
 import ButtonGoogle from "../../components/ButtonGoogle";
+import ScrollToTop from "../../components/ScrollToTop";
 
 const SignUpPage = () => {
   //Variable
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
-  const { roles } = useRoleHook();
-  const roleUser = roles?.data?.find((role) => role.slug === "user");
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -32,7 +30,6 @@ const SignUpPage = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    roleId: roleUser?._id,
     avatar: null,
   });
   const [errors, setErrors] = useState({
@@ -47,7 +44,6 @@ const SignUpPage = () => {
   //Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name);
 
     // Create a new form object to avoid multiple state updates
     let updatedForm = { ...form };
@@ -214,6 +210,7 @@ const SignUpPage = () => {
 
   return (
     <MainLayout>
+      <ScrollToTop />
       <div className="flex items-center justify-center h-fit my-4">
         <motion.div
           initial={{ opacity: 0, y: -50 }}
@@ -358,7 +355,7 @@ const SignUpPage = () => {
               type="submit"
               className="w-full p-3 text-third border border-primary bg-primary hover:bg-third  hover:text-primary font-bold rounded-xl transition-all"
             >
-              {loading ? "Loading" : "Sign Up"}
+              {loading ? "Signing Up..." : "Sign Up"}
             </button>
             {errors.form && (
               <p className="text-red-500 text-xs text-center">{errors.form}</p>

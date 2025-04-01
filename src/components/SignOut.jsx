@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 import { LogOut } from "lucide-react";
 
-const ProfilePage = () => {
+const SignOut = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -34,10 +34,8 @@ const ProfilePage = () => {
       confirmSignOut();
     }
   };
-
   return (
-    <div>
-      {" "}
+    <>
       <button
         onClick={handleSignOutClick}
         className="flex items-center text-secondary hover:text-text transition duration-300"
@@ -46,8 +44,8 @@ const ProfilePage = () => {
         <LogOut className="mr-2" />
         {loading ? "Loading..." : "Sign Out"}
       </button>
-    </div>
+    </>
   );
 };
 
-export default ProfilePage;
+export default SignOut;

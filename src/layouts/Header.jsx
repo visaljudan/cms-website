@@ -4,18 +4,29 @@ import { useSelector } from "react-redux";
 import { useCategoryHook } from "../hooks/useCategoryHook";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import Loading from "../components/Loading";
 
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
   const user = currentUser?.data?.user;
-  const { categories, loading, getCategories } = useCategoryHook();
+  const { categories, loading } = useCategoryHook();
   const [menuOpen, setMenuOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
 
+  const [open, setOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setOpen((prev) => !prev);
+  };
+
+  const closeDropdown = () => {
+    setOpen(false);
+  };
+
   return (
-    <div>
-      <div className="flex justify-center w-full shadow-xl">
-        <header className="w-10/12 py-4 sm:text-base">
+    <div className="bg-white z-50 sticky top-0">
+      <div className="flex justify-center w-full  shadow-xl">
+        <header className="w-10/12 py-4 sm:text-base90 ">
           <nav className="flex items-center justify-between text-primary">
             <div className="text-lg font-bold">
               <NavLink to="/" className="text-3xl hover:font-bold">
@@ -28,75 +39,67 @@ const Header = () => {
               <NavLink
                 to="/"
                 className={({ isActive }) =>
-                  `group relative flex items-center gap-2 hover:font-semibold ${
+                  `hover:font-semibold ${
                     isActive ? "font-semibold text-primary" : "text-gray-500"
                   }`
                 }
               >
                 Home
-                {/* <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-primary transition-all duration-400 ease-in-out group-hover:w-full"></span> */}
               </NavLink>
 
-              {/* Category Dropdown */}
-              <div className="relative group">
-                <NavLink
-                  to="/category"
-                  className="group relative flex items-center gap-2 hover:text-primary hover:font-semibold"
-                >
-                  Category
-                  {/* <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-primary transition-all duration-400 ease-in-out group-hover:w-full"></span> */}
-                </NavLink>
+              <NavLink
+                to="/categories"
+                className={({ isActive }) =>
+                  `hover:font-semibold  hover:text-primary ${
+                    isActive ? "font-semibold text-primary" : "text-gray-500"
+                  }`
+                }
+              >
+                Categories
+              </NavLink>
 
-                <div className="absolute z-20 -left-20 hidden w-[500px] mt-1 h-[250px] space-y-2 bg-white shadow-lg group-hover:block">
-                  {loading ? (
-                    <p className="text-center py-4 text-gray-500">
-                      Loading categories...
-                    </p>
-                  ) : categories?.total === 0 ? (
-                    <p className="text-center py-4 text-gray-500">
-                      No categories available.
-                    </p>
-                  ) : categories?.data ? (
-                    <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto">
-                      {categories.data.map((category) => (
-                        <NavLink
-                          key={category._id}
-                          to={`category/${category.slug}`}
-                          className="block px-4 py-2 text-base text-primary hover:bg-gray-100"
-                        >
-                          {category.name}
-                        </NavLink>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-center py-4 text-red-500">
-                      Failed to load categories.
-                    </p>
-                  )}
-                </div>
-              </div>
+              <NavLink
+                to="/authors"
+                className={({ isActive }) =>
+                  `hover:font-semibold  hover:text-primary ${
+                    isActive ? "font-semibold text-primary" : "text-gray-500"
+                  }`
+                }
+              >
+                Authors
+              </NavLink>
 
               <NavLink
                 to="/about-us"
-                className="group relative flex items-center gap-2 hover:text-primary hover:font-semibold"
+                className={({ isActive }) =>
+                  `hover:font-semibold  hover:text-primary ${
+                    isActive ? "font-semibold text-primary" : "text-gray-500"
+                  }`
+                }
               >
                 About Us
-                {/* <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-primary transition-all duration-400 ease-in-out group-hover:w-full"></span> */}
               </NavLink>
+
               <NavLink
                 to="/contact-us"
-                className="group relative flex items-center gap-2 hover:text-primary hover:font-semibold"
+                className={({ isActive }) =>
+                  `hover:font-semibold hover:text-primary ${
+                    isActive ? "font-semibold text-primary" : "text-gray-500"
+                  }`
+                }
               >
                 Contact Us
-                {/* <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-primary transition-all duration-400 ease-in-out group-hover:w-full"></span> */}
               </NavLink>
+
               <NavLink
                 to="/search"
-                className="group relative flex items-center gap-2 hover:text-primary hover:font-semibold"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 hover:font-semibold hover:text-primary ${
+                    isActive ? "font-semibold text-primary" : "text-gray-500"
+                  }`
+                }
               >
                 <Search size={20} />
-                {/* Search */}
-                {/* <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-primary transition-all duration-400 ease-in-out group-hover:w-full"></span> */}
               </NavLink>
             </div>
 
@@ -173,7 +176,7 @@ const Header = () => {
               {categories.data?.map((category) => (
                 <NavLink
                   key={category._id}
-                  to={`/category/${category._id}`}
+                  to={`/category/${category.slug}`}
                   className="block px-4 py-2 hover:bg-gray-100"
                 >
                   {category.name}
@@ -196,7 +199,6 @@ const Header = () => {
           </NavLink>
         </motion.div>
       )}
-      ;
     </div>
   );
 };

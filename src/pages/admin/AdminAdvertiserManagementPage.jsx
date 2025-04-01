@@ -182,88 +182,92 @@ const AdminAdvertiserManagementPage = () => {
             <Plus className="mr-2" /> Add Advertiser
           </button>
         </div>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search advertisers..."
-          className="w-full px-4 py-2 border rounded-lg mb-4"
-        />
-        <table className="w-full border border-gray-200 rounded-lg">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2 font-bold text-gray-600 text-start">
-                Id
-              </th>
-              <th className="px-4 py-2 font-bold text-gray-600 text-start">
-                Name
-              </th>
-              <th className="px-4 py-2 font-bold text-gray-600 text-start">
-                Email
-              </th>
-              <th className="px-4 py-2 font-bold text-gray-600 text-start">
-                Company
-              </th>
-              <th className="px-4 py-2 font-bold text-gray-600 text-start">
-                Website
-              </th>
-              <th className="px-4 py-2 font-bold text-gray-600 text-start">
-                Phone
-              </th>
-              <th className="px-4 py-2 font-bold text-gray-600 text-start">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {advertisersLoading ? (
+        <div className="mb-6 flex items-center space-x-4">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search advertisers..."
+            className="w-full px-4 py-2 border rounded-lg mb-4"
+          />
+        </div>
+        <div className="overflow-auto">
+          <table className="w-full border border-gray-200 rounded-lg">
+            <thead className="bg-gray-100">
               <tr>
-                <td colSpan={7} className="text-center py-4">
-                  <Loading />
-                </td>
+                <th className="px-4 py-2 font-bold text-gray-600 text-start">
+                  Id
+                </th>
+                <th className="px-4 py-2 font-bold text-gray-600 text-start">
+                  Name
+                </th>
+                <th className="px-4 py-2 font-bold text-gray-600 text-start">
+                  Email
+                </th>
+                <th className="px-4 py-2 font-bold text-gray-600 text-start">
+                  Company
+                </th>
+                <th className="px-4 py-2 font-bold text-gray-600 text-start">
+                  Website
+                </th>
+                <th className="px-4 py-2 font-bold text-gray-600 text-start">
+                  Phone
+                </th>
+                <th className="px-4 py-2 font-bold text-gray-600 text-start">
+                  Actions
+                </th>
               </tr>
-            ) : filteredAdvertisers?.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="text-center py-4">
-                  No advertisers available
-                </td>
-              </tr>
-            ) : filteredAdvertisers ? (
-              filteredAdvertisers?.map((advertiser) => (
-                <tr key={advertiser._id} className="border-t border-gray-200">
-                  <td className="px-4 py-2">{advertiser._id}</td>
-                  <td className="px-4 py-2">{advertiser.name}</td>
-                  <td className="px-4 py-2">{advertiser.email}</td>
-                  <td className="px-4 py-2">{advertiser.company}</td>
-                  <td className="px-4 py-2">{advertiser.website}</td>
-                  <td className="px-4 py-2">{advertiser.phone}</td>
-                  <td className="px-4 py-2 flex space-x-2">
-                    <button
-                      onClick={() => handleEdit(advertiser)}
-                      className="text-yellow-500 hover:text-yellow-600"
-                      title="Edit"
-                    >
-                      <Edit />
-                    </button>
-                    <button
-                      onClick={() => openModal(advertiser)}
-                      className="text-red-500 hover:text-red-600"
-                      title="Delete"
-                    >
-                      <Trash />
-                    </button>
+            </thead>
+            <tbody>
+              {advertisersLoading ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-4">
+                    <Loading />
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={7} className="text-center text-red-500 py-4">
-                  An unexpected error occurred.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : filteredAdvertisers?.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-4">
+                    No advertisers available
+                  </td>
+                </tr>
+              ) : filteredAdvertisers ? (
+                filteredAdvertisers?.map((advertiser) => (
+                  <tr key={advertiser._id} className="border-t border-gray-200">
+                    <td className="px-4 py-2">{advertiser._id}</td>
+                    <td className="px-4 py-2">{advertiser.name}</td>
+                    <td className="px-4 py-2">{advertiser.email}</td>
+                    <td className="px-4 py-2">{advertiser.company}</td>
+                    <td className="px-4 py-2">{advertiser.website}</td>
+                    <td className="px-4 py-2">{advertiser.phone}</td>
+                    <td className="px-4 py-2 flex-row items-center justify-center space-x-2">
+                      <button
+                        onClick={() => handleEdit(advertiser)}
+                        className="text-yellow-500 hover:text-yellow-600"
+                        title="Edit"
+                      >
+                        <Edit />
+                      </button>
+                      <button
+                        onClick={() => openModal(advertiser)}
+                        className="text-red-500 hover:text-red-600"
+                        title="Delete"
+                      >
+                        <Trash />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="text-center text-red-500 py-4">
+                    An unexpected error occurred.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
         {/* Delete Confirmation Modal */}
         {showModal && (
           <div className="fixed inset-0 ml-auto w-5/6 flex items-center justify-center bg-gray-200 ">
