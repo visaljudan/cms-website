@@ -43,9 +43,7 @@ const SearchPage = () => {
       article.excerpt?.toLowerCase().includes(lowerCaseQuery) ||
       article.content?.toLowerCase().includes(lowerCaseQuery) ||
       article.tags?.some((tag) => tag.toLowerCase().includes(lowerCaseQuery)) ||
-      article.userId?.name?.toLowerCase().includes(lowerCaseQuery) ||
-      article.categoryId?.name?.toLowerCase().includes(lowerCaseQuery) ||
-      article.categoryId?.slug?.toLowerCase().includes(lowerCaseQuery)
+      article.userId?.name?.toLowerCase().includes(lowerCaseQuery)
     );
   });
 

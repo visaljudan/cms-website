@@ -43,7 +43,9 @@ const ArticleDetailPage = () => {
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [loadingReply, setLoadingReply] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [comment, setComment] = useState("");
+  // const [comments, setComments] = useState("");
   const [openMenus, setOpenMenus] = useState({});
   const [likes, setLikes] = useState({});
 
@@ -76,29 +78,34 @@ const ArticleDetailPage = () => {
     fetchArticle();
   }, [articleId]);
 
-  // Comment
+  // Comments
   const fetchComments = useCallback(async () => {
+    if (!article?._id) return;
+    setLoading(true);
     try {
       const params = {
-        articleId: article?._id,
+        articleId: article._id,
       };
-      const response = await getComments(params);
-      if (response.data.success) {
-        // Handle successful response if needed
-      } else {
-        setError(response.data.message);
-      }
+      await getComments(params);
+      // if (response?.data) {
+      //   setComments(response.data);
+      //   setError(null);
+      // } else {
+      //   setError(response?.data?.message || "Failed to fetch comments.");
+      // }
     } catch (error) {
       console.error("Error fetching comments:", error);
       setError("Failed to fetch comments. Please try again later.");
-    }
-  }, [articleId]);
-
-  useEffect(() => {
-    if (article?._id !== null) {
-      fetchComments();
+    } finally {
+      setLoading(false);
     }
   }, [article?._id]);
+
+  useEffect(() => {
+    if (article?._id) {
+      fetchComments();
+    }
+  }, [fetchComments]);
 
   // Create Comment
   const handlePostComment = async () => {
@@ -292,7 +299,7 @@ const ArticleDetailPage = () => {
   // Function to track when both conditions are met
   const checkTrackingCondition = async (currentTime) => {
     if (!hasTracked && currentTime >= 10000 && scrollDepth >= 50) {
-      console.log("✅ Tracking triggered");
+      // console.log("✅ Tracking triggered");
       await trackingArticle();
       setHasTracked((prev) => true);
     }
@@ -411,16 +418,21 @@ const ArticleDetailPage = () => {
               <div className="space-x-1 my-2 font-semibold text-gray-500">
                 <NavLink
                   to={`/author/${article?.userId?._id}`}
-                  className="text-xs hover:underline hover:text-red-500"
+                  className="text-xs lg:text-lg hover:underline hover:text-red-500"
                 >
                   {article?.userId?.name}
                 </NavLink>
                 |{" "}
-                <NavLink className="text-xs hover:underline hover:text-red-500">
+                <NavLink
+                  to={`category/${article?.categoryId?.slug}`}
+                  className="text-xs lg:text-lg hover:underline hover:text-red-500"
+                >
                   {article?.categoryId?.name}
                 </NavLink>
-                | <span className="text-xs">{formattedDate}</span> |{" "}
-                <span className="text-xs">{article?.views} views</span>
+                | <span className="text-xs lg:text-lg">{formattedDate}</span> |{" "}
+                <span className="text-xs lg:text-lg">
+                  {article?.views} views
+                </span>
               </div>
               <button
                 onClick={
@@ -529,7 +541,7 @@ const ArticleDetailPage = () => {
                 </button>
                 <button
                   onClick={handlePostComment}
-                  className={`flex items-cente justify-center ${
+                  className={`flex items-cente justify-center lg:hidden ${
                     loadingCreate ? "text-gray-500" : "text-primary"
                   }`}
                 >
@@ -538,7 +550,7 @@ const ArticleDetailPage = () => {
               </div>
 
               {/* Comment List */}
-            <div className="space-y-4 text-xs lg:text-base">
+              <div className="space-y-4 text-xs lg:text-base">
                 {comments?.total > 0 ? (
                   comments?.data
                     .filter((comment) => !comment.parentId)

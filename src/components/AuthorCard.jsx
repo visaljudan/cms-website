@@ -4,7 +4,7 @@ const AuthorCard = ({ author }) => {
   if (!author) return null;
 
   return (
-    <div className="bg-white shadow-lg rounded-lg px-4 py-2 flex items-center text-center border ">
+    <div className="bg-white shadow-lg rounded-lg px-4 py-2 flex items-center text-center border w-96 ">
       {/* Author Image */}
       <img
         src={author.avatar || "/images/default-avatar.png"}
