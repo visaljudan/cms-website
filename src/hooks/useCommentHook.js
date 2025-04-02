@@ -109,9 +109,9 @@ export const useCommentHook = (articleId) => {
 
   const handleCommentCreated = (newComment) => {
     setComments((prevComments) => {
-      if (newComment.articleId?.articleId.toString() !== articleId)
+      if (newComment.articleId?.articleId.toString() !== articleId) {
         return prevComments;
-
+      }
       return {
         ...prevComments,
         data: [newComment, ...prevComments.data].sort(

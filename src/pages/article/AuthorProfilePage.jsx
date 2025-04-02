@@ -9,8 +9,9 @@ import AuthorCard from "../../components/AuthorCard";
 
 const AuthorProfilePage = () => {
   const { authorId } = useParams();
-  const { getUser, loading, getUsers } = useUserHook();
+  const { getUser, loading: usersLoading, getUsers } = useUserHook();
   const { getArticles, loading: loadingArticles } = useArticleHook();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [author, setAuthor] = useState(null);
   const [authors, setAuthors] = useState(null);
@@ -23,6 +24,7 @@ const AuthorProfilePage = () => {
 
     const fetchData = async () => {
       try {
+        setLoading(true);
         // Fetch Author
         const response = await getUser(authorId);
         if (response.data.success) {
@@ -45,6 +47,8 @@ const AuthorProfilePage = () => {
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to fetch data. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -128,7 +132,7 @@ const AuthorProfilePage = () => {
           <div className="mt-12">
             <h3 className="text-xl font-bold text-gray-700">Other Authors</h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 my-4">
-              {loading ? (
+              {usersLoading ? (
                 <p>Loading authors...</p>
               ) : error ? (
                 <p className="text-center text-red-500">{error}</p>
