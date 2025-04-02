@@ -14,4 +14,7 @@ export default defineConfig({
       quill: "quill/dist/quill.js",
     },
   },
+  server: {
+    allowedHosts: ["https://cms-website-l9rw.onrender.com"],
+  },
 });
